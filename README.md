@@ -25,6 +25,7 @@ A simple and intuitive web application to generate custom YouTube thumbnails. Up
 2. **Upload Image or Choose Template**:
    - Upload your own image by clicking "Choose Image".
    - Select a template from the "Choose Template" tab.
+   - Define expressions or choose from a preset
 3. **Generate Thumbnail**: Click the "Generate Thumbnails" button to create your thumbnail.
 
 
