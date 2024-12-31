@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Stack,
@@ -24,34 +24,40 @@ import {
   IconButton,
   VStack,
   Center,
+  ChakraProvider,
 } from '@chakra-ui/react';
 import { ChromePicker } from 'react-color';
 import { InfoIcon } from '@chakra-ui/icons';
 
-function TextCustomization({ inputText, imagePreview, textSettings, setTextSettings }) {
+function TextCustomization({ inputText, imagePreview, textSettings = {}, setTextSettings }) {
   const [isMobile] = useMediaQuery('(max-width: 768px)');
 
-  const fontSizes = {
-    min: 20,
-    max: 120,
-    default: 60
+  // Default settings with fallback values
+  const defaultTextSettings = {
+    fontFamily: 'Arial',
+    fontSize: 60,
+    color: '#000000',
+    outlineWidth: 0,
+    position: 'middle',
   };
 
+  const mergedTextSettings = { ...defaultTextSettings, ...textSettings };
+
   return (
-    <Stack 
-      spacing={8} 
-      direction={isMobile ? 'column' : 'row'} 
+    <Stack
+      spacing={8}
+      direction={isMobile ? 'column' : 'row'}
       w="full"
       bg="gray.50"
       p={6}
       borderRadius="xl"
     >
       {/* Left Side: Text Customization Controls */}
-      <Box 
-        flex={1} 
-        bg="white" 
-        p={8} 
-        borderRadius="xl" 
+      <Box
+        flex={1}
+        bg="white"
+        p={8}
+        borderRadius="xl"
         boxShadow="0 4px 6px rgba(0, 0, 0, 0.1)"
       >
         <VStack spacing={6} align="stretch">
@@ -72,8 +78,8 @@ function TextCustomization({ inputText, imagePreview, textSettings, setTextSetti
             </Flex>
             <Select
               mt={2}
-              value={textSettings.fontFamily}
-              onChange={(e) => setTextSettings({ ...textSettings, fontFamily: e.target.value })}
+              value={mergedTextSettings.fontFamily}
+              onChange={(e) => setTextSettings({ ...mergedTextSettings, fontFamily: e.target.value })}
               bg="white"
               borderColor="gray.300"
               _hover={{ borderColor: "purple.400" }}
@@ -102,10 +108,10 @@ function TextCustomization({ inputText, imagePreview, textSettings, setTextSetti
             </Flex>
             <Flex gap={4} mt={2}>
               <Slider
-                value={textSettings.fontSize}
-                min={fontSizes.min}
-                max={fontSizes.max}
-                onChange={(value) => setTextSettings({ ...textSettings, fontSize: value })}
+                value={mergedTextSettings.fontSize}
+                min={20}
+                max={120}
+                onChange={(value) => setTextSettings({ ...mergedTextSettings, fontSize: value })}
                 flex={1}
               >
                 <SliderTrack bg="gray.200">
@@ -114,10 +120,10 @@ function TextCustomization({ inputText, imagePreview, textSettings, setTextSetti
                 <SliderThumb boxSize={6} shadow="md" />
               </Slider>
               <NumberInput
-                value={textSettings.fontSize}
-                onChange={(value) => setTextSettings({ ...textSettings, fontSize: parseInt(value) })}
-                min={fontSizes.min}
-                max={fontSizes.max}
+                value={mergedTextSettings.fontSize}
+                onChange={(value) => setTextSettings({ ...mergedTextSettings, fontSize: parseInt(value) })}
+                min={20}
+                max={120}
                 width="100px"
                 borderColor="gray.300"
               >
@@ -145,8 +151,8 @@ function TextCustomization({ inputText, imagePreview, textSettings, setTextSetti
             </Flex>
             <Box mt={2} p={4} border="1px" borderColor="gray.200" borderRadius="md">
               <ChromePicker
-                color={textSettings.color}
-                onChange={(color) => setTextSettings({ ...textSettings, color: color.hex })}
+                color={mergedTextSettings.color}
+                onChange={(color) => setTextSettings({ ...mergedTextSettings, color: color.hex })}
                 styles={{ default: { picker: { width: '100%', boxShadow: 'none' } } }}
               />
             </Box>
@@ -167,10 +173,10 @@ function TextCustomization({ inputText, imagePreview, textSettings, setTextSetti
             </Flex>
             <Flex gap={4} mt={2}>
               <Slider
-                value={textSettings.outlineWidth}
+                value={mergedTextSettings.outlineWidth}
                 min={0}
                 max={10}
-                onChange={(value) => setTextSettings({ ...textSettings, outlineWidth: value })}
+                onChange={(value) => setTextSettings({ ...mergedTextSettings, outlineWidth: value })}
                 flex={1}
               >
                 <SliderTrack bg="gray.200">
@@ -179,8 +185,8 @@ function TextCustomization({ inputText, imagePreview, textSettings, setTextSetti
                 <SliderThumb boxSize={6} shadow="md" />
               </Slider>
               <NumberInput
-                value={textSettings.outlineWidth}
-                onChange={(value) => setTextSettings({ ...textSettings, outlineWidth: parseInt(value) })}
+                value={mergedTextSettings.outlineWidth}
+                onChange={(value) => setTextSettings({ ...mergedTextSettings, outlineWidth: parseInt(value) })}
                 min={0}
                 max={10}
                 width="100px"
@@ -210,26 +216,26 @@ function TextCustomization({ inputText, imagePreview, textSettings, setTextSetti
             </Flex>
             <RadioGroup
               mt={2}
-              value={textSettings.position}
-              onChange={(value) => setTextSettings({ ...textSettings, position: value })}
+              value={mergedTextSettings.position}
+              onChange={(value) => setTextSettings({ ...mergedTextSettings, position: value })}
             >
               <Stack direction="row" spacing={4}>
-                <Radio 
-                  value="top" 
+                <Radio
+                  value="top"
                   colorScheme="purple"
                   borderColor="gray.300"
                 >
                   Top
                 </Radio>
-                <Radio 
-                  value="middle" 
+                <Radio
+                  value="middle"
                   colorScheme="purple"
                   borderColor="gray.300"
                 >
                   Middle
                 </Radio>
-                <Radio 
-                  value="bottom" 
+                <Radio
+                  value="bottom"
                   colorScheme="purple"
                   borderColor="gray.300"
                 >
@@ -242,11 +248,11 @@ function TextCustomization({ inputText, imagePreview, textSettings, setTextSetti
       </Box>
 
       {/* Right Side: Letter Preview */}
-      <Box 
-        flex={1} 
-        bg="white" 
-        p={8} 
-        borderRadius="xl" 
+      <Box
+        flex={1}
+        bg="white"
+        p={8}
+        borderRadius="xl"
         boxShadow="0 4px 6px rgba(0, 0, 0, 0.1)"
       >
         <Heading size="md" color="gray.700" mb={6}>Preview</Heading>
@@ -260,17 +266,17 @@ function TextCustomization({ inputText, imagePreview, textSettings, setTextSetti
         >
           <Text
             position="absolute"
-            top={textSettings.position === 'top' ? '20%' : textSettings.position === 'bottom' ? '80%' : '50%'}
+            top={mergedTextSettings.position === 'top' ? '20%' : mergedTextSettings.position === 'bottom' ? '80%' : '50%'}
             left="50%"
             transform="translate(-50%, -50%)"
-            fontFamily={textSettings.fontFamily}
-            fontSize={`${textSettings.fontSize * 1.5}px`}
-            color={textSettings.color}
+            fontFamily={mergedTextSettings.fontFamily}
+            fontSize={`${mergedTextSettings.fontSize * 1.5}px`}
+            color={mergedTextSettings.color}
             textShadow={`
-              -${textSettings.outlineWidth}px -${textSettings.outlineWidth}px 0 #000,
-              ${textSettings.outlineWidth}px -${textSettings.outlineWidth}px 0 #000,
-              -${textSettings.outlineWidth}px ${textSettings.outlineWidth}px 0 #000,
-              ${textSettings.outlineWidth}px ${textSettings.outlineWidth}px 0 #000
+              -${mergedTextSettings.outlineWidth}px -${mergedTextSettings.outlineWidth}px 0 #000,
+              ${mergedTextSettings.outlineWidth}px -${mergedTextSettings.outlineWidth}px 0 #000,
+              -${mergedTextSettings.outlineWidth}px ${mergedTextSettings.outlineWidth}px 0 #000,
+              ${mergedTextSettings.outlineWidth}px ${mergedTextSettings.outlineWidth}px 0 #000
             `}
             userSelect="none"
           >

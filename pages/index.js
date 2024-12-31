@@ -125,6 +125,8 @@ export default function Home() {
     setImagePreview('');
   };
 
+  
+
   const handleExpressionChange = (name, value) => {
     setExpressionValues(prev => ({
       ...prev,
@@ -155,10 +157,7 @@ export default function Home() {
     
     setIsLoading(true);
     try {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-      });
+
       const formData = new FormData();
       formData.append('text', inputText);
       formData.append('textSettings', JSON.stringify(textSettings));
